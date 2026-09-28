@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>GitHub PR Shortcuts settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">GitHub PR Shortcuts</p>
+      <h1>GitHub token</h1>
+      <p class="lede">
+        The extension calls the GitHub API with a personal access token (PAT).
+        Approvals and merges are made as the token's owner.
+      </p>
+      <section>
+        <h2>Token</h2>
+        <p id="status" class="status">Checking…</p>
+        <form id="token-form">
+          <label for="token">Personal access token</label>
+          <input
+            id="token"
+            type="password"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="github_pat_… or ghp_…"
+          />
+          <div class="buttons">
+            <button type="submit">Save and verify</button>
+            <button type="button" id="clear" class="secondary" disabled>Remove token</button>
+          </div>
+        </form>
+      </section>
+      <section>
+        <h2>Creating a token</h2>
+        <p>
+          <strong>Fine-grained:</strong>
+          <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">create a token</a>
+          with the organization as resource owner, access to the repositories you review,
+          and these repository permissions:
+        </p>
+        <ul>
+          <li><strong>Pull requests: Read and write</strong> to read stacks and approve.</li>
+          <li><strong>Contents: Read and write</strong> to merge.</li>
+          <li><strong>Metadata: Read</strong>, which GitHub adds automatically.</li>
+        </ul>
+        <p>An organization admin may need to approve a fine-grained token before it works.</p>
+        <p>
+          <strong>Classic:</strong>
+          <a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=GitHub%20Stack%20Actions" target="_blank" rel="noreferrer">create a token</a>
+          with the <code>repo</code> scope, then use <strong>Configure SSO</strong> on the
+          token list to authorize it for SAML-protected organizations.
+        </p>
+      </section>
+      <section>
+        <h2>How actions work</h2>
+        <ul>
+          <li>The PR page reads the stack, head SHAs, reviews, and merge state from GitHub's GraphQL API.</li>
+          <li><strong>Approve</strong> submits an APPROVE review pinned to the head SHA shown, and refuses if the PR has moved since.</li>
+          <li><strong>Merge</strong> uses GitHub's asynchronous merge API with the expected head SHA, so GitHub cancels it if the branch changes. Only the base-most open PR in a stack can be merged.</li>
+          <li>GitHub still enforces branch protection, required checks, and merge queues.</li>
+          <li>The token is kept in this Chrome profile's extension storage and sent only to <code>api.github.com</code>.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

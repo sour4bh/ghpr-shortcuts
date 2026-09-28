@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub PR Shortcuts",
+  "version": "0.3.0",
+  "description": "Approve pull requests, inspect PR stacks, and merge stack entries from the PR page using a GitHub personal access token.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://api.github.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "GitHub PR Shortcuts settings"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
